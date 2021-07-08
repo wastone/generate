@@ -1,0 +1,14 @@
+{
+  "name": "@wastone/generate",
+  "version": "1.0.0",
+  "description": "生成前端代码库",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wastone",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.30.0"
+  }
+}
