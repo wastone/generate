@@ -11,7 +11,7 @@ $ npm install -D @wastone/generate
 
 ## Features
 
-- generate page code by db (mysql, oracle)
+- generate page code by db (mysql, oracle) and tpl file
 
 ## Usage
 

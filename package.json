@@ -1,14 +1,42 @@
 {
-  "name": "@wastone/generate",
-  "version": "1.0.0",
-  "description": "生成前端代码库",
-  "main": "./lib/index.js",
+  "name": "generate",
+  "version": "0.0.1",
+  "description": "generate file by db(mysql or oracle) and tpl file",
+  "main": "lib/index.js",
+  "module": "lib/index.esm.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "set NODE_ENV=developemnt&& rollup -c rollup.config.js -w",
+    "build": "rimraf -fr lib && set NODE_ENV=production&& rollup -c rollup.config.js"
   },
-  "author": "wastone",
-  "license": "MIT",
+  "types": "lib/index.d.ts",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "inquirer": "^8.2.1",
+    "mysql": "^2.18.1",
+    "oracledb": "^5.3.0"
+  },
   "devDependencies": {
-    "eslint": "^7.30.0"
-  }
+    "@rollup/plugin-alias": "^3.1.9",
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-eslint": "^8.0.1",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@rollup/plugin-typescript": "^8.3.1",
+    "@types/mysql": "^2.15.21",
+    "@types/oracledb": "^5.2.3",
+    "@typescript-eslint/parser": "^5.15.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.70.1",
+    "rollup-plugin-polyfill-node": "^0.8.0",
+    "typescript": "^4.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitee.com:wl7175/generate.git"
+  },
+  "keywords": [
+    "generate",
+    "wastone"
+  ],
+  "author": "wastone",
+  "license": "MIT"
 }

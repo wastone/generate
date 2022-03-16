@@ -2,24 +2,23 @@
  * @decription oracle数据库配置
  * @author wl
 */
-const oracledb = require('oracledb')
-const tool = require('./tool')
-
-const config = {
-  user: 'his_bill',
-  password: '123456',
-  // IP:数据库IP地址，PORT:数据库端口，SCHEMA:数据库名称
-  connectString: '192.168.2.126:1521/TIMER'
-}
+import oracledb from 'oracledb'
+import { convertToHump } from '@/utils/index'
 /**
  * 请求数据库 查询表结构
  * @param {string} tableName 表名
  */
-const connectDatabase = (tableName, config) => {
+const connectDatabase = (oracleConfig: OracleConfig, tableName: string) => {
   return new Promise((resolve, reject) => {
+    const config = {
+      user: oracleConfig.username,
+      password: oracleConfig.password,
+      // IP:数据库IP地址，PORT:数据库端口，SCHEMA:数据库名称
+      connectString: `${oracleConfig.host}:${oracleConfig.port}/${oracleConfig.serviceID}`
+    }
     oracledb.getConnection(
       config,
-      function (err, connection) {
+      function (err: any, connection: any) {
         if (err) {
           console.error(err.message)
           return
@@ -39,7 +38,7 @@ const connectDatabase = (tableName, config) => {
       AND ut.column_name = ucc.column_name
       AND UT.TABLE_NAME = UCC.TABLE_NAME
       AND ut.Table_Name = '${tableName}'`,
-        function (err, result) {
+        function (err: any, result: any) {
           if (err) {
             console.error(err.message)
             reject(err)
@@ -52,12 +51,12 @@ const connectDatabase = (tableName, config) => {
             return
           }
           // 打印返回的表结构
-          let column = []
-          let tableName = tool.convertToHump(result.rows[0][0])
-          let tableComment = tool.convertToHump(result.rows[0][1])
-          result.rows.forEach(r => {
+          let column:any = []
+          let tableName = convertToHump(result.rows[0][0])
+          let tableComment = convertToHump(result.rows[0][1])
+          result.rows.forEach((r:any) => {
             column.push({
-              name: tool.convertToHump(r[2]),
+              name: convertToHump(r[2]),
               comment: r[3]
             })
           })
@@ -71,9 +70,9 @@ const connectDatabase = (tableName, config) => {
   })
 }
 
-function doRelease (connection) {
+function doRelease (connection: any) {
   connection.close(
-    function (err) {
+    function (err: any) {
       if (err) {
         console.log('error1')
         console.error(err.message)
@@ -82,4 +81,4 @@ function doRelease (connection) {
     })
 }
 
-module.exports = connectDatabase
+export default connectDatabase
