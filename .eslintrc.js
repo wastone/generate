@@ -10,6 +10,12 @@ module.exports = {
     es6: true
   },
   parser: '@typescript-eslint/parser', // 配置ts解析器
+  plugins: ["@typescript-eslint"],
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx']
+    }
+  ],
   parserOptions: {
     project: resolve('./tsconfig.json'),
     tsconfigRootDir: resolve('./'),
@@ -18,8 +24,8 @@ module.exports = {
   rules: {
     'indent': ['off', 2],
     'no-unused-vars': 'error',
-    'no-restricted-globals': ['error', ...DOMGlobals, ...NodeGlobals],
+    'no-restricted-globals': ['off', ...DOMGlobals],
     'no-console': 'off',
   },
-  ignorePatterns: ["rollup.config.js", "types/*", "lib"]
+  ignorePatterns: ["rollup.config.js", "types/*", "lib", "example/**/*"]
 }

@@ -1,16 +1,19 @@
 {
-  "name": "generate",
-  "version": "0.0.1",
+  "name": "@wastone/generate",
+  "version": "0.0.3",
   "description": "generate file by db(mysql or oracle) and tpl file",
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
   "scripts": {
     "dev": "set NODE_ENV=developemnt&& rollup -c rollup.config.js -w",
-    "build": "rimraf -fr lib && set NODE_ENV=production&& rollup -c rollup.config.js"
+    "build": "rimraf -fr lib && set NODE_ENV=production&& rollup -c rollup.config.js",
+    "test": "npm run build && node example/index",
+    "pub": "npm publish --registry http://127.0.0.1:4873"
   },
   "types": "lib/index.d.ts",
   "dependencies": {
-    "chalk": "^5.0.1",
+    "art-template": "^4.13.2",
+    "chalk": "^4.1.2",
     "inquirer": "^8.2.1",
     "mysql": "^2.18.1",
     "oracledb": "^5.3.0"
@@ -24,10 +27,12 @@
     "@types/inquirer": "^8.2.0",
     "@types/mysql": "^2.15.21",
     "@types/oracledb": "^5.2.3",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.70.1",
     "rollup-plugin-polyfill-node": "^0.8.0",
+    "rollup-plugin-typescript2": "^0.31.2",
     "typescript": "^4.6.2"
   },
   "repository": {
@@ -37,6 +42,11 @@
   "keywords": [
     "generate",
     "wastone"
+  ],
+  "files": [
+    "package.json",
+    "lib",
+    "types"
   ],
   "author": "wastone",
   "license": "MIT"

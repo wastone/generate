@@ -2,16 +2,17 @@
  * @decription oracle数据库配置
  * @author wl
 */
-import oracledb from 'oracledb'
+const oracledb = require('oracledb')
 import { convertToHump } from '@/utils/index'
+import { DatabaseConfig, TableColumnInfo, TableInfo } from 'types/database'
 /**
  * 请求数据库 查询表结构
  * @param {string} tableName 表名
  */
-const connectDatabase = (oracleConfig: OracleConfig, tableName: string) => {
+const connectDatabase = (oracleConfig: DatabaseConfig, tableName: string): Promise<TableInfo> => {
   return new Promise((resolve, reject) => {
     const config = {
-      user: oracleConfig.username,
+      user: oracleConfig.user,
       password: oracleConfig.password,
       // IP:数据库IP地址，PORT:数据库端口，SCHEMA:数据库名称
       connectString: `${oracleConfig.host}:${oracleConfig.port}/${oracleConfig.serviceID}`
@@ -51,10 +52,10 @@ const connectDatabase = (oracleConfig: OracleConfig, tableName: string) => {
             return
           }
           // 打印返回的表结构
-          let column:any = []
+          let column:TableColumnInfo[] = []
           let tableName = convertToHump(result.rows[0][0])
           let tableComment = convertToHump(result.rows[0][1])
-          result.rows.forEach((r:any) => {
+          result.rows.forEach((r:string[]) => {
             column.push({
               name: convertToHump(r[2]),
               comment: r[3]

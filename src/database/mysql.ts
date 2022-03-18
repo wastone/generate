@@ -2,14 +2,17 @@
  * @decription mysql数据库配置
  * @author wl
 */
-import mysql from 'mysql'
+
+// import mysql from 'mysql'
+const mysql = require('mysql')
 import { convertToHump } from '@/utils/index'
+import { DatabaseConfig, TableColumnInfo, TableInfo } from 'types/database'
 
 /**
  * 请求数据库 查询表结构
  * @param {string} tableName 表名
  */
-const connectDatabase = (config: mysql.ConnectionConfig, tableName: string) => {
+const connectDatabase = (config: DatabaseConfig, tableName: string): Promise<TableInfo> => {
   return new Promise((resolve, reject) => {
     // 创建连接
     const connection = mysql.createConnection(config)
@@ -34,7 +37,7 @@ const connectDatabase = (config: mysql.ConnectionConfig, tableName: string) => {
     t.TABLE_NAME = '${tableName}'
     and
     c.TABLE_NAME = '${tableName}'
-    `, function (error, results) {
+    `, function (error: any, results: any) {
       if (error) {
         reject(error)
         throw error
@@ -44,7 +47,7 @@ const connectDatabase = (config: mysql.ConnectionConfig, tableName: string) => {
         reject({ message: '未查询到表信息，检查输入表名称是否正确' })
       }
       // 打印返回的表结构
-      let column:any = []
+      let column:TableColumnInfo[] = []
       let tableName = convertToHump(results[0].TABLE_NAME)
       let tableComment = convertToHump(results[0].TABLE_COMMENT)
       results.forEach((r:any) => {
@@ -59,7 +62,7 @@ const connectDatabase = (config: mysql.ConnectionConfig, tableName: string) => {
         tableComment
       })
     })
-    connection.end(err => {
+    connection.end((err: any) => {
       if (err) throw err
       console.log('连接数据库关闭')
     })

@@ -2,7 +2,8 @@ import path from 'path'
 import { nodeResolve } from '@rollup/plugin-node-resolve' // 依赖引用插件
 import commonjs from '@rollup/plugin-commonjs' // commonjs模块转换插件
 import eslint from '@rollup/plugin-eslint' // eslint插件
-import typescript from '@rollup/plugin-typescript'
+// import typescript from '@rollup/plugin-typescript'
+import typescript from 'rollup-plugin-typescript2'
 import alias from '@rollup/plugin-alias'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
 const getPath = _path => path.resolve(__dirname, _path)

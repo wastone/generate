@@ -1,4 +1,5 @@
 # @wastone/generate
+英文文档|[中文文档](README-zh-CN.md)
 
 > generate page code by db
 

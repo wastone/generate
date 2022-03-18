@@ -5,10 +5,22 @@
  *  - 支持可视化操作
  *  - vscode 插件支持
  */
-import inquirer from 'inquirer'
+// import inquirer from 'inquirer'
+const inquirer = require('inquirer')
+const path = require('path')
+const fs = require('fs')
+const template = require("art-template")
+const chalk = require("chalk")
 
-import * as fileUtil from "./utils/file"
+// import { readFile } from "./utils/file"
 import connectDatabase from '@/database'
+
+import { Option } from 'types'
+import { dotExistDirectoryCreate, generateFile } from './utils/file'
+
+const log = (message: string) => { console.log(chalk.blue(`${message}`)) }
+const successLog = (message: string) => {console.log(chalk.green(`${message}`))}
+const errorLog = (error: string) => {console.log(chalk.red(`${error}`))}
 
 class Generate {
   // 配置参数
@@ -20,10 +32,18 @@ class Generate {
   }
 
   public async run(): Promise<void> {
-    const { tplPath, outPath, databaseType, mysqlConfig, oracleConfig } = this.option
-    console.log(this.option)
-    console.log(fileUtil)
-    console.log(connectDatabase)
+    const { tplPath, outPath, databaseType, databaseConfig } = this.option
+    // 校验模板路径
+    const tplPathExists: boolean = fs.existsSync(tplPath)
+    if (!tplPathExists) {
+      errorLog(`模板路径${tplPath}不存在，请检查配置项tplPath`)
+      return
+    }
+    const ext = path.extname(outPath)
+    if (!ext) {
+      errorLog('输出路径没有文件后缀，请检查配置outPath')
+      return
+    }
     // 提示输入表名
     const { tableName } = await inquirer.prompt([
       {
@@ -39,12 +59,30 @@ class Generate {
       }
     ])
     // 获取数据库表信息
-    const databaseConfig = databaseType === 'mysql' ? mysqlConfig : oracleConfig
+    if (!databaseConfig) {
+      errorLog('数据库配置databaseConfig不能为空')
+      return
+    }
     const connect = databaseType === 'mysql' ? connectDatabase.mysqlConnect : connectDatabase.oracleConnect
+    log(`正在连接数据库获取表信息，请稍候...`)
     const tableInfo = await connect(databaseConfig, tableName)
-    console.log(tableInfo)
-    console.log(tplPath)
-    console.log(outPath)
+    successLog('获取数据库表信息成功')
+
+    log(`正在根据模板${path.basename(tplPath)}生成文件 ${outPath}`)
+    try {
+      // 递归生成目录
+      const directory: string = path.dirname(outPath)
+      await dotExistDirectoryCreate(directory)
+      
+      // 生成文件
+      // 针对\{\{\}\}做一下处理
+      let tplData = template(tplPath, tableInfo)
+      tplData = tplData.replace(/\\{\\{/g, '{{').replace(/\\}\\}/g, '}}')
+      await generateFile(outPath, tplData)
+      successLog(`生成文件${outPath}成功`)
+    } catch (error:any) {
+      error.message ? errorLog('生成失败，原因：' + error.message) : console.error(error)
+    }
   }
 }
 

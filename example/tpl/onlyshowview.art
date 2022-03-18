@@ -1,0 +1,77 @@
+<template>
+  <div class="{{viewName}}-page">
+    <div class="{{viewName}}-page-content">
+      <div class="search-container">
+        {{each column}}
+        <label>{{$value.comment}}</label>
+        <el-input v-model="listQuery.{{$value.name}}" placeholder="{{$value.comment}}" class="search-item input-m" size="mini"></el-input>
+        {{/each}}
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="search">
+          查询
+        </el-button>
+      </div>
+      <st-table
+      ref="sttable"
+      url="/dyq/{{viewName}}/page"
+      :query="listQuery"
+      :isAutoRender="false"
+      :paging="true"
+      :column="tableInfo"
+      :index="true">
+        <template slot="{{column[0].name}}" slot-scope="scope">
+          <el-button
+            @click="show(scope)"
+            size="mini">
+            查看
+          </el-button>
+        </template>
+      </st-table>
+    </div>
+    <!-- show-dialog s-->
+    <el-dialog class="show-dialog" title="信息查看" :visible.sync="showDialogVisible">
+      <el-form size="small" label-width="105px" label-position="left">
+        {{each column}}
+        <el-form-item label="{{$value.comment}}">
+          <span>\{\{rowData.{{$value.name}}\}\}</span>
+        </el-form-item>
+        {{/each}}
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showDialogVisible = false" size="small">关 闭</el-button>
+      </div>
+    </el-dialog>
+    <!-- show-dialog e-->
+  </div>
+</template>
+<script>
+
+export default {
+  name: '{{viewName}}',
+  data () {
+    return {
+      tableInfo: [
+        {{each column}}
+        { prop: '{{$value.name}}', label: '{{$value.comment}}' },
+        {{/each}}
+        { prop: '{{column[0].name}}', label: '操作', width: 240, scope: true }
+      ],
+      listQuery: {
+        {{each column}}
+        {{$value.name}}: null,
+        {{/each}}
+      },
+      showDialogVisible: false,
+      rowData: {}
+    }
+  },
+  methods: {
+    search () {
+      this.$refs.sttable.reload()
+    },
+    show (scope) {
+      this.rowData = scope.row
+      this.showDialogVisible = true
+    }
+  }
+}
+</script>
