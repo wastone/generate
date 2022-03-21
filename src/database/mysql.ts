@@ -6,7 +6,7 @@
 // import mysql from 'mysql'
 const mysql = require('mysql')
 import { convertToHump } from '@/utils/index'
-import { DatabaseConfig, TableColumnInfo, TableInfo } from 'types/database'
+import { DatabaseConfig, TableColumnInfo, TableInfo } from 'types'
 
 /**
  * 请求数据库 查询表结构

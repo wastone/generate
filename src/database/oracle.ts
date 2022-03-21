@@ -4,7 +4,7 @@
 */
 const oracledb = require('oracledb')
 import { convertToHump } from '@/utils/index'
-import { DatabaseConfig, TableColumnInfo, TableInfo } from 'types/database'
+import { DatabaseConfig, TableColumnInfo, TableInfo } from 'types'
 /**
  * 请求数据库 查询表结构
  * @param {string} tableName 表名

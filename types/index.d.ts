@@ -1,8 +1,26 @@
-import { DatabaseConfig } from "./database";
+export interface DatabaseConfig {
+  host: string,
+  user: string,
+  password: string,
+  port: number,
+  database?: string,
+  serviceID?: string
+}
+
+export interface TableColumnInfo {
+  name: string,
+  comment?: string
+}
+
+export interface TableInfo {
+  column: TableColumnInfo[],
+  tableName: string,
+  tableComment?: string
+
+}
 
 export interface Option {
   tplPath: string,
   outPath: string,
-  databaseType: 'mysql' | 'oracle',
-  databaseConfig: DatabaseConfig
+  templateData?: unknown
 }

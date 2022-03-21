@@ -1,5 +1,5 @@
 const path = require('path')
-const Generate = require('@wastone/generate')
+const Generate = require('../lib/index')
 
 const databaseConfig = {
   user: 'dyq',
@@ -8,17 +8,24 @@ const databaseConfig = {
   port: 1521,
   serviceID: 'TIMETRS'
 }
+let generate = new Generate()
 
-// new Generate({
-//   tplPath: path.resolve(__dirname, './tpl/api.art'),
-//   outPath: path.resolve(__dirname, './dist/api.js'),
-//   databaseType: 'oracle',
-//   databaseConfig
-// })
+const apiConfig = {
+  tplPath: path.resolve(__dirname, './tpl/api.art'),
+  outPath: path.resolve(__dirname, './dist/api.js'),
+  databaseType: 'oracle',
+  databaseConfig
+}
 
-new Generate({
+const showViewConfig = {
   tplPath: path.resolve(__dirname, './tpl/onlyshowview.art'),
   outPath: path.resolve(__dirname, './dist/show.vue'),
   databaseType: 'oracle',
   databaseConfig
+}
+
+generate.setDatabase('oracle', databaseConfig)
+
+generate.createFile(apiConfig).then(() => {
+  generate.createFile(showViewConfig)
 })
