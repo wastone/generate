@@ -33,13 +33,18 @@ class Generate {
   constructor() {}
 
   /**
-   * setDatabase
+   * setDatabase  设置数据库信息
    */
   public setDatabase(databaseType: DatabaseType, databaseConfig: DatabaseConfig) {
     this.databaseType = databaseType
     this.databaseConfig = databaseConfig
   }
 
+  /**
+   * 根据配置生成文件
+   * @param option 配置参数
+   * @returns 
+   */
   public async createFile(option: Option): Promise<Generate | never> {
     console.log('create start')
     const { tplPath, outPath, templateData } = option

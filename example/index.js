@@ -1,5 +1,5 @@
 const path = require('path')
-const Generate = require('../lib/index')
+const Generate = require('@wastone/generate')
 
 const databaseConfig = {
   user: 'dyq',
@@ -26,6 +26,17 @@ const showViewConfig = {
 
 generate.setDatabase('oracle', databaseConfig)
 
-generate.createFile(apiConfig).then(() => {
-  generate.createFile(showViewConfig)
+async function run () {
+  console.log('======开始======')
+  try {
+    await generate.createFile(apiConfig)
+    await generate.createFile(showViewConfig)
+  } catch (error) {
+    console.log(error)
+    return Promise.reject('生成失败')
+  }
+}
+
+run().then(() => {
+  console.log('======全部生成结束======')
 })
