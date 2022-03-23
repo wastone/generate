@@ -37,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitee.com:wl7175/generate.git"
+    "url": "git@github.com:wastone/generate.git"
   },
   "keywords": [
     "generate",
