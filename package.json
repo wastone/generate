@@ -1,6 +1,6 @@
 {
   "name": "@wastone/generate",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "generate file by db(mysql or oracle) and tpl file",
   "main": "lib/index.js",
   "module": "lib/index.esm.js",
@@ -46,7 +46,8 @@
   "files": [
     "package.json",
     "lib",
-    "types"
+    "types",
+    "README-zh-CN.md"
   ],
   "author": "wastone",
   "license": "MIT"

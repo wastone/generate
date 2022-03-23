@@ -92,7 +92,7 @@ const apiConfig = {
   outPath: path.resolve(__dirname, './dist/api.js'),
   databaseType: 'oracle',
   databaseConfig,
-  // templateData: { name: '1' } // 支持自定义数据 Object,string
+  // templateData: { name: '1' } // support custom data (format: Object|string)
 }
 
 // the second configuration
