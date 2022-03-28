@@ -7,7 +7,7 @@
 ## Install
 
 ```bash
-$ npm install -D generatefile
+$ npm install -D @wlwastone/generate-file
 ```
 
 ## Features

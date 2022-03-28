@@ -8,7 +8,7 @@
 
 ```bash
 // 适用于开发模式
-$ npm install -D generatefile
+$ npm install -D @wlwastone/generate-file
 ```
 
 ## 特性
