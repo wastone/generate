@@ -8,7 +8,7 @@
 
 ```bash
 // 适用于开发模式
-$ npm install -D generate-file
+$ npm install -D generatefile
 ```
 
 ## 特性

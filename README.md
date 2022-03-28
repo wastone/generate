@@ -7,7 +7,7 @@
 ## Install
 
 ```bash
-$ npm install -D generate-file
+$ npm install -D generatefile
 ```
 
 ## Features

@@ -1,5 +1,5 @@
 {
-  "name": "generate-file",
+  "name": "generatefile",
   "version": "0.0.7",
   "description": "generate file by db(mysql or oracle) and tpl file",
   "main": "lib/index.js",
