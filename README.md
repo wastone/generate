@@ -7,7 +7,7 @@
 ## Install
 
 ```bash
-$ npm install -D @wastone/generate
+$ npm install -D generate-file
 ```
 
 ## Features
@@ -37,7 +37,10 @@ The `tpl` directory is used to store template files. The template uses [art-temp
   tableComment?: string,
   column: [{
     name: string,
-    comment?: string
+    nullable: boolean,
+    type: string,
+    comment?: string,
+    dataDefault?: any
   }]
 }
 

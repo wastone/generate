@@ -8,7 +8,7 @@
 
 ```bash
 // 适用于开发模式
-$ npm install -D @wastone/generate
+$ npm install -D generate-file
 ```
 
 ## 特性
@@ -37,8 +37,11 @@ $ npm install -D @wastone/generate
   tableName: string,
   tableComment?: string,
   column: [{
-    name: string,
-    comment?: string
+    name: string,      // 列名称
+    nullable: boolean,  // 是否可以为null
+    dataType: string,      // 数据类型 number | varchar | int | datetime等
+    comment?: string,   // 注释
+    dataDefault?: any  // 默认值
   }]
 }
 

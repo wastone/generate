@@ -1,30 +1,40 @@
 const path = require('path')
-const Generate = require('@wastone/generate')
+const Generate = require('../lib/index')
+
+/*=========== 自己的数据库配置 ================*/
+// const databaseConfig = {
+//   user: '**',
+//   password: '**',
+//   host: '192.168.2.**',
+//   port: 1521,
+//   serviceID: '**'
+// }
 
 const databaseConfig = {
-  user: 'dyq',
-  password: 'zzdxwl2204',
-  host: '192.168.2.190',
-  port: 1521,
-  serviceID: 'TIMETRS'
+  user: 'root',
+  password: 'root',
+  host: '127.0.0.1',
+  port: 3306,
+  database: '**'
 }
+
 let generate = new Generate()
 
 const apiConfig = {
   tplPath: path.resolve(__dirname, './tpl/api.art'),
   outPath: path.resolve(__dirname, './dist/api.js'),
-  databaseType: 'oracle',
+  databaseType: 'mysql',
   databaseConfig
 }
 
 const showViewConfig = {
   tplPath: path.resolve(__dirname, './tpl/onlyshowview.art'),
   outPath: path.resolve(__dirname, './dist/show.vue'),
-  databaseType: 'oracle',
+  databaseType: 'mysql',
   databaseConfig
 }
 
-generate.setDatabase('oracle', databaseConfig)
+generate.setDatabase('mysql', databaseConfig)
 
 async function run () {
   console.log('======开始======')

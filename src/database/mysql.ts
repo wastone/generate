@@ -24,8 +24,10 @@ const connectDatabase = (config: DatabaseConfig, tableName: string): Promise<Tab
     t.TABLE_NAME,
     t.TABLE_COMMENT,
     c.COLUMN_NAME,
-    c.COLUMN_TYPE,
-    c.COLUMN_COMMENT 
+    c.DATA_TYPE,
+    c.IS_NULLABLE,
+    c.COLUMN_COMMENT,
+    c.COLUMN_DEFAULT 
     FROM 
     information_schema.TABLES t,
     INFORMATION_SCHEMA.Columns c 
@@ -53,7 +55,10 @@ const connectDatabase = (config: DatabaseConfig, tableName: string): Promise<Tab
       results.forEach((r:any) => {
         column.push({
           name: convertToHump(r.COLUMN_NAME),
-          comment: r.COLUMN_COMMENT
+          comment: r.COLUMN_COMMENT,
+          nullable: r.IS_NULLABLE === 'YES'? true : false,
+          dataType: r.DATA_TYPE,
+          dataDefault: r.COLUMN_DEFAULT
         })
       })
       resolve({

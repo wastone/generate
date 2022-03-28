@@ -9,7 +9,10 @@ export interface DatabaseConfig {
 
 export interface TableColumnInfo {
   name: string,
-  comment?: string
+  nullable: boolean,
+  dataType: string,
+  comment?: string,
+  dataDefault?: any
 }
 
 export interface TableInfo {

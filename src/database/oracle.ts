@@ -29,7 +29,10 @@ const connectDatabase = (oracleConfig: DatabaseConfig, tableName: string): Promi
         ut.TABLE_NAME,
         uc.comments,
         ut.COLUMN_NAME,
-        UCC.comments
+        ucc.comments,
+        ut.DATA_TYPE,
+        ut.NULLABLE,
+        ut.DATA_DEFAULT
       FROM
         user_tab_columns ut,
         user_tab_comments uc,
@@ -37,7 +40,7 @@ const connectDatabase = (oracleConfig: DatabaseConfig, tableName: string): Promi
       WHERE
         ut.TABLE_NAME = uc.TABLE_NAME
       AND ut.column_name = ucc.column_name
-      AND UT.TABLE_NAME = UCC.TABLE_NAME
+      AND UT.TABLE_NAME = ucc.TABLE_NAME
       AND ut.Table_Name = '${tableName}'`,
         function (err: any, result: any) {
           if (err) {
@@ -58,7 +61,10 @@ const connectDatabase = (oracleConfig: DatabaseConfig, tableName: string): Promi
           result.rows.forEach((r:string[]) => {
             column.push({
               name: convertToHump(r[2]),
-              comment: r[3]
+              comment: r[3],
+              nullable: r[5] === 'Y'? true : false,
+              dataType: r[4],
+              dataDefault: r[6]
             })
           })
           resolve({
