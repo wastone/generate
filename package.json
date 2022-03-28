@@ -48,7 +48,11 @@
     "lib",
     "types",
     "README-zh-CN.md"
-  ],
+  ], 
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "author": "wastone",
   "license": "MIT"
 }
