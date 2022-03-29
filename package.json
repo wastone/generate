@@ -7,8 +7,7 @@
   "scripts": {
     "dev": "set NODE_ENV=developemnt&& rollup -c rollup.config.js -w",
     "build": "rimraf -fr lib && set NODE_ENV=production&& rollup -c rollup.config.js",
-    "test": "npm run build && node example/index",
-    "pub": "npm publish --registry http://127.0.0.1:4873"
+    "test": "npm run build && node example/index"
   },
   "types": "lib/index.d.ts",
   "dependencies": {

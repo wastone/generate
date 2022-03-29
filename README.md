@@ -1,4 +1,4 @@
-# @wastone/generate
+# generate
 [中文文档](README-zh-CN.md)
 
 ##### Generate files from template files and database tables

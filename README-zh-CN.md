@@ -1,4 +1,4 @@
-# @wastone/generate
+# generate
 [英文文档](README.md)|中文文档
 
 ##### 根据模板文件和数据库表生成文件
