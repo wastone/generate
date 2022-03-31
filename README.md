@@ -7,7 +7,7 @@
 ## Install
 
 ```bash
-$ npm install -D @wlwastone/generate-file
+$ npm install -D @wastone/generate
 ```
 
 ## Features
