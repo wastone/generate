@@ -31,5 +31,5 @@ export interface Option {
   /**
    * 自定义方法 
    */
-  customUtils?: Record<string, any>
+  customTempUtils?: Record<string, any>
 }

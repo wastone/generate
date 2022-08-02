@@ -28,16 +28,22 @@ const databaseConfig = {
 function test11 () {
   return 'test11'
 }
+function test22 () {
+  return 'test22'
+}
 
 let generate = new Generate()
 
 generate.setDatabase('mysql', databaseConfig)
+generate.setGlobalTempUtils({
+  test11
+})
 
 const apiConfig = {
   tplPath: path.resolve(__dirname, './tpl/api.art'),
   outPath: path.resolve(__dirname, './dist/api.js'),
-  customUtils: {
-    test11
+  customTempUtils: {
+    test22
   }
 }
 

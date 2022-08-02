@@ -1,6 +1,7 @@
 import * as http from '@/api'
 
 console.log({{utils.test11()}})
+console.log({{utils.test22()}})
 
 console.log({{utils.convertToHump('a_bbbb')}})
 

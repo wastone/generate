@@ -28,6 +28,7 @@ class Generate {
 
   private databaseType: DatabaseType | null = null
   private databaseConfig: DatabaseConfig | null = null
+  private globalTempUtils: Record<string, any> | null = null
 
   constructor() {}
 
@@ -37,6 +38,13 @@ class Generate {
   public setDatabase(databaseType: DatabaseType, databaseConfig: DatabaseConfig) {
     this.databaseType = databaseType
     this.databaseConfig = databaseConfig
+  }
+
+  /**
+   * 设置模板全局公用对象
+   */
+  public setGlobalTempUtils (globalTempUtils: Record<string, any>) {
+    this.globalTempUtils = globalTempUtils
   }
 
   /**
@@ -70,9 +78,8 @@ class Generate {
     return new Promise((resolve, reject) => {
       let count = 0
 
-      async function next () {
-        console.log(options.length, count)
-        const { tplPath, outPath, templateData, customUtils = {} } = options[count]
+      const next =  async () => {
+        const { tplPath, outPath, templateData, customTempUtils = {} } = options[count]
 
         // 校验模板路径
         const tplPathExists: boolean = fs.existsSync(tplPath)
@@ -95,7 +102,8 @@ class Generate {
           
           // 生成文件
           // 针对\{\{\}\}做一下处理
-          let tplData = template(tplPath, { tableInfo, templateData, utils: { ...utils, ...customUtils }})
+          const tempUtils = { ...customTempUtils, ...utils, ...(this.globalTempUtils || {}) }
+          let tplData = template(tplPath, { tableInfo, templateData, utils: tempUtils})
           tplData = tplData.replace(/\\{\\{/g, '{{').replace(/\\}\\}/g, '}}')
           await generateFile(outPath, tplData)
           successLog(`生成文件${outPath}成功`)
