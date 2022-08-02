@@ -27,7 +27,8 @@ const connectDatabase = (config: DatabaseConfig, tableName: string): Promise<Tab
     c.DATA_TYPE,
     c.IS_NULLABLE,
     c.COLUMN_COMMENT,
-    c.COLUMN_DEFAULT 
+    c.COLUMN_DEFAULT,
+    c.CHARACTER_MAXIMUM_LENGTH
     FROM 
     information_schema.TABLES t,
     INFORMATION_SCHEMA.Columns c 
@@ -54,11 +55,13 @@ const connectDatabase = (config: DatabaseConfig, tableName: string): Promise<Tab
       let tableComment = convertToHump(results[0].TABLE_COMMENT)
       results.forEach((r:any) => {
         column.push({
-          name: convertToHump(r.COLUMN_NAME),
+          name: r.COLUMN_NAME,
+          humpName: convertToHump(r.COLUMN_NAME),
           comment: r.COLUMN_COMMENT,
           nullable: r.IS_NULLABLE === 'YES'? true : false,
           dataType: r.DATA_TYPE,
-          dataDefault: r.COLUMN_DEFAULT
+          dataDefault: r.COLUMN_DEFAULT,
+          maxLength: r.CHARACTER_MAXIMUM_LENGTH
         })
       })
       resolve({

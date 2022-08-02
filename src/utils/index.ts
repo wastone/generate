@@ -5,16 +5,19 @@
  * @returns 
  */
 export const convertToHump = (str: string, char = '_') => {
-  if (!str) return ''
-  str = str.toLocaleLowerCase()
-  let arr = []
-  let strArr = str.split(char)
-  for (let i = 0; i < strArr.length; i++) {
-    let a = strArr[i]
-    if (i > 0) {
-      a = strArr[i][0].toLocaleUpperCase() + strArr[i].slice(1)
-    }
-    arr.push(a)
-  }
-  return arr.join('')
+  if (!str) return '';
+  str = str.toLocaleLowerCase();
+  const reg = new RegExp(`(?:${char})(\\w)`, 'g');
+  return str.replace(reg, ($0, $1) => $1.toLocaleUpperCase());
+}
+
+/**
+ * 反向转换驼峰    aBa => a_ba
+ * @param str 要转换的源字符串
+ * @param char 源字符串分隔字符
+ * @returns
+ */
+ export const reConvertToHump = (str: string, char = '_') => {
+  if (!str) return '';
+  return str.replace(/[A-Z]/g, ($0) => char + $0.toLocaleLowerCase());
 }

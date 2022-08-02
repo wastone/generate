@@ -1,5 +1,12 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
 const path = require('path')
 const Generate = require('../lib/index')
+
+import { fileURLToPath } from 'url'
+const filename = fileURLToPath(import.meta.url) // 这里不能声明__filename,因为已经有内部的__filename了，重复声明会报错
+const __dirname = path.dirname(filename)
 
 /*=========== 自己的数据库配置 ================*/
 // const databaseConfig = {
@@ -15,32 +22,34 @@ const databaseConfig = {
   password: 'root',
   host: '127.0.0.1',
   port: 3306,
-  database: '**'
+  database: 'myfund'
+}
+
+function test11 () {
+  return 'test11'
 }
 
 let generate = new Generate()
 
+generate.setDatabase('mysql', databaseConfig)
+
 const apiConfig = {
   tplPath: path.resolve(__dirname, './tpl/api.art'),
   outPath: path.resolve(__dirname, './dist/api.js'),
-  databaseType: 'mysql',
-  databaseConfig
+  customUtils: {
+    test11
+  }
 }
 
 const showViewConfig = {
   tplPath: path.resolve(__dirname, './tpl/onlyshowview.art'),
-  outPath: path.resolve(__dirname, './dist/show.vue'),
-  databaseType: 'mysql',
-  databaseConfig
+  outPath: path.resolve(__dirname, './dist/show.vue')
 }
-
-generate.setDatabase('mysql', databaseConfig)
 
 async function run () {
   console.log('======开始======')
   try {
-    await generate.createFile(apiConfig)
-    await generate.createFile(showViewConfig)
+    await generate.createFile([apiConfig, showViewConfig])
   } catch (error) {
     console.log(error)
     return Promise.reject('生成失败')

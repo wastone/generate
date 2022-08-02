@@ -32,7 +32,8 @@ const connectDatabase = (oracleConfig: DatabaseConfig, tableName: string): Promi
         ucc.comments,
         ut.DATA_TYPE,
         ut.NULLABLE,
-        ut.DATA_DEFAULT
+        ut.DATA_DEFAULT,
+        ut.CHAR_COL_DECL_LENGTH
       FROM
         user_tab_columns ut,
         user_tab_comments uc,
@@ -60,11 +61,13 @@ const connectDatabase = (oracleConfig: DatabaseConfig, tableName: string): Promi
           let tableComment = convertToHump(result.rows[0][1])
           result.rows.forEach((r:string[]) => {
             column.push({
-              name: convertToHump(r[2]),
+              name: r[2],
+              humpName: convertToHump(r[2]),
               comment: r[3],
               nullable: r[5] === 'Y'? true : false,
               dataType: r[4],
-              dataDefault: r[6]
+              dataDefault: r[6],
+              maxLength: r[7] ? parseInt(r[7]) : 0
             })
           })
           resolve({

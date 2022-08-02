@@ -9,10 +9,12 @@ export interface DatabaseConfig {
 
 export interface TableColumnInfo {
   name: string,
+  humpName: string,
   nullable: boolean,
   dataType: string,
   comment?: string,
-  dataDefault?: any
+  dataDefault?: any,
+  maxLength?: number
 }
 
 export interface TableInfo {
@@ -25,5 +27,9 @@ export interface TableInfo {
 export interface Option {
   tplPath: string,
   outPath: string,
-  templateData?: Object | string
+  templateData?: Object | string,
+  /**
+   * 自定义方法 
+   */
+  customUtils?: Record<string, any>
 }

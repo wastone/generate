@@ -2,9 +2,9 @@
   <div class="{{viewName}}-page">
     <div class="{{viewName}}-page-content">
       <div class="search-container">
-        {{each column}}
+        {{each tableInfo.column}}
         <label>{{$value.comment}}</label>
-        <el-input v-model="listQuery.{{$value.name}}" placeholder="{{$value.comment}}" class="search-item input-m" size="mini"></el-input>
+        <el-input v-model="listQuery.{{$value.humpName}}" placeholder="{{$value.comment}}" class="search-item input-m" size="mini"></el-input>
         {{/each}}
         <el-button type="primary" icon="el-icon-search" size="mini" @click="search">
           查询
@@ -18,7 +18,7 @@
       :paging="true"
       :column="tableInfo"
       :index="true">
-        <template slot="{{column[0].name}}" slot-scope="scope">
+        <template slot="{{tableInfo.column[0].name}}" slot-scope="scope">
           <el-button
             @click="show(scope)"
             size="mini">
@@ -30,9 +30,9 @@
     <!-- show-dialog s-->
     <el-dialog class="show-dialog" title="信息查看" :visible.sync="showDialogVisible">
       <el-form size="small" label-width="105px" label-position="left">
-        {{each column}}
+        {{each tableInfo.column}}
         <el-form-item label="{{$value.comment}}">
-          <span>\{\{rowData.{{$value.name}}\}\}</span>
+          <span>\{\{rowData.{{$value.humpName}}\}\}</span>
         </el-form-item>
         {{/each}}
       </el-form>
@@ -50,14 +50,14 @@ export default {
   data () {
     return {
       tableInfo: [
-        {{each column}}
-        { prop: '{{$value.name}}', label: '{{$value.comment}}' },
+        {{each tableInfo.column}}
+        { prop: '{{$value.humpName}}', label: '{{$value.comment}}' },
         {{/each}}
-        { prop: '{{column[0].name}}', label: '操作', width: 240, scope: true }
+        { prop: '{{tableInfo.column[0].name}}', label: '操作', width: 240, scope: true }
       ],
       listQuery: {
-        {{each column}}
-        {{$value.name}}: null,
+        {{each tableInfo.column}}
+        {{$value.humpName}}: null,
         {{/each}}
       },
       showDialogVisible: false,

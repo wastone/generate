@@ -5,7 +5,6 @@
  *  - 支持可视化操作
  *  - vscode 插件支持
  */
-// import inquirer from 'inquirer'
 const inquirer = require('inquirer')
 const path = require('path')
 const fs = require('fs')
@@ -15,9 +14,9 @@ const chalk = require("chalk")
 // import { readFile } from "./utils/file"
 import connectDatabase from '@/database'
 
-import { Option } from 'types'
-import { DatabaseConfig, TableInfo } from "types";
+import { DatabaseConfig, TableInfo, Option } from "types";
 import { dotExistDirectoryCreate, generateFile } from './utils/file'
+import * as utils from './utils'
 
 const log = (message: string) => { console.log(chalk.blue(`${message}`)) }
 const successLog = (message: string) => {console.log(chalk.green(`${message}`))}
@@ -45,53 +44,77 @@ class Generate {
    * @param option 配置参数
    * @returns 
    */
-  public async createFile(option: Option): Promise<Generate | never> {
+  public async createFile(options: Option[]): Promise<Generate | never> {
     console.log('create start')
-    const { tplPath, outPath, templateData } = option
     const { databaseType, databaseConfig } = this
     const useDb = databaseType && databaseConfig
 
-    if (!useDb && !templateData) {
-      errorLog('数据库配置和模板数据必须配置一个')
-      throw new Error('数据库配置和模板数据必须配置一个')
-    }
     if (databaseType && !databaseConfig) {
       errorLog('数据库配置databaseConfig不能为空，请使用setDatabase方法设置')
       throw new Error('数据库配置databaseConfig不能为空，请使用setDatabase方法设置')
     }
 
-    // 校验模板路径
-    const tplPathExists: boolean = fs.existsSync(tplPath)
-    if (!tplPathExists) {
-      errorLog(`模板路径${tplPath}不存在，请检查配置项tplPath`)
-      throw new Error(`模板路径${tplPath}不存在，请检查配置项tplPath`)
-    }
-    const ext = path.extname(outPath)
-    if (!ext) {
-      errorLog('输出路径没有文件后缀，会造成未知错误，请检查配置outPath')
-      throw new Error('输出路径没有文件后缀，会造成未知错误，请检查配置outPath')
+    if (!useDb && options.filter(v => !v.templateData).length > 0) {
+      errorLog('数据库配置和模板数据必须配置一个')
+      throw new Error('数据库配置和模板数据必须配置一个')
     }
 
-    const tableInfo = useDb ? await this.getTemplateDataByDb() : templateData
+    const tableInfo = useDb ? await this.getTemplateDataByDb() : undefined
 
-    log(`正在根据模板${path.basename(tplPath)}生成文件 ${outPath}`)
-    try {
-      // 递归生成目录
-      const directory: string = path.dirname(outPath)
-      await dotExistDirectoryCreate(directory)
-      
-      // 生成文件
-      // 针对\{\{\}\}做一下处理
-      let tplData = template(tplPath, tableInfo)
-      tplData = tplData.replace(/\\{\\{/g, '{{').replace(/\\}\\}/g, '}}')
-      await generateFile(outPath, tplData)
-      successLog(`生成文件${outPath}成功`)
-    } catch (error:any) {
-      error.message ? errorLog('生成失败，原因：' + error.message) : console.error(error)
-      throw new Error(error)
-    }
-    console.log('create end')
+    await this.createFileImpl(options, tableInfo)
+
     return this
+  }
+
+  private createFileImpl (options: Option[], tableInfo?: TableInfo): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let count = 0
+
+      async function next () {
+        console.log(options.length, count)
+        const { tplPath, outPath, templateData, customUtils = {} } = options[count]
+
+        // 校验模板路径
+        const tplPathExists: boolean = fs.existsSync(tplPath)
+        if (!tplPathExists) {
+          errorLog(`模板路径${tplPath}不存在，请检查配置项tplPath`)
+          throw new Error(`模板路径${tplPath}不存在，请检查配置项tplPath`)
+        }
+        const ext = path.extname(outPath)
+        if (!ext) {
+          errorLog('输出路径没有文件后缀，会造成未知错误，请检查配置outPath')
+          throw new Error('输出路径没有文件后缀，会造成未知错误，请检查配置outPath')
+        }
+
+
+        log(`正在根据模板${path.basename(tplPath)}生成文件 ${outPath}`)
+        try {
+          // 递归生成目录
+          const directory: string = path.dirname(outPath)
+          await dotExistDirectoryCreate(directory)
+          
+          // 生成文件
+          // 针对\{\{\}\}做一下处理
+          let tplData = template(tplPath, { tableInfo, templateData, utils: { ...utils, ...customUtils }})
+          tplData = tplData.replace(/\\{\\{/g, '{{').replace(/\\}\\}/g, '}}')
+          await generateFile(outPath, tplData)
+          successLog(`生成文件${outPath}成功`)
+          count++
+          if (count >= options.length) {
+            console.log('create end')
+            resolve()
+          } else {
+            next()
+          }
+        } catch (error:any) {
+          reject(error)
+          error.message ? errorLog('生成失败，原因：' + error.message) : console.error(error)
+          throw new Error(error)
+        }
+      }
+
+      next()
+    })
   }
 
   /**
