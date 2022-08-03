@@ -27,7 +27,6 @@ export interface TableInfo {
 export interface Option {
   tplPath: string,
   outPath: string,
-  templateData?: Object | string,
   /**
    * 自定义方法 
    */

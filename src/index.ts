@@ -22,7 +22,7 @@ const log = (message: string) => { console.log(chalk.blue(`${message}`)) }
 const successLog = (message: string) => {console.log(chalk.green(`${message}`))}
 const errorLog = (error: string) => {console.log(chalk.red(`${error}`))}
 
-type DatabaseType = 'mysql' | 'oracle' | null
+type DatabaseType = 'mysql' | 'oracle'
 
 class Generate {
 
@@ -55,19 +55,13 @@ class Generate {
   public async createFile(options: Option[]): Promise<Generate | never> {
     console.log('create start')
     const { databaseType, databaseConfig } = this
-    const useDb = databaseType && databaseConfig
 
-    if (databaseType && !databaseConfig) {
-      errorLog('数据库配置databaseConfig不能为空，请使用setDatabase方法设置')
-      throw new Error('数据库配置databaseConfig不能为空，请使用setDatabase方法设置')
+    if (!databaseType || !databaseConfig) {
+      errorLog('数据库配置不能为空，请使用setDatabase方法设置')
+      throw new Error('数据库配置，请使用setDatabase方法设置')
     }
 
-    if (!useDb && options.filter(v => !v.templateData).length > 0) {
-      errorLog('数据库配置和模板数据必须配置一个')
-      throw new Error('数据库配置和模板数据必须配置一个')
-    }
-
-    const tableInfo = useDb ? await this.getTemplateDataByDb() : undefined
+    const tableInfo = await this.getTemplateDataByDb()
 
     await this.createFileImpl(options, tableInfo)
 
@@ -79,7 +73,7 @@ class Generate {
       let count = 0
 
       const next =  async () => {
-        const { tplPath, outPath, templateData, customTempUtils = {} } = options[count]
+        const { tplPath, outPath, customTempUtils = {} } = options[count]
 
         // 校验模板路径
         const tplPathExists: boolean = fs.existsSync(tplPath)
@@ -103,7 +97,7 @@ class Generate {
           // 生成文件
           // 针对\{\{\}\}做一下处理
           const tempUtils = { ...customTempUtils, ...utils, ...(this.globalTempUtils || {}) }
-          let tplData = template(tplPath, { tableInfo, templateData, utils: tempUtils})
+          let tplData = template(tplPath, { tableInfo, utils: tempUtils})
           tplData = tplData.replace(/\\{\\{/g, '{{').replace(/\\}\\}/g, '}}')
           await generateFile(outPath, tplData)
           successLog(`生成文件${outPath}成功`)

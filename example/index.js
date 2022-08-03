@@ -9,21 +9,23 @@ const filename = fileURLToPath(import.meta.url) // 这里不能声明__filename,
 const __dirname = path.dirname(filename)
 
 /*=========== 自己的数据库配置 ================*/
-// const databaseConfig = {
-//   user: '**',
-//   password: '**',
-//   host: '192.168.2.**',
-//   port: 1521,
-//   serviceID: '**'
-// }
-
+// oracle 配置
 const databaseConfig = {
-  user: 'root',
-  password: 'root',
-  host: '127.0.0.1',
-  port: 3306,
-  database: 'myfund'
+  user: '*',
+  password: '*',
+  host: '*.*.*.*',
+  port: 1521,
+  serviceID: '*'
 }
+
+// mysql 配置
+// const databaseConfig = {
+//   user: 'root',
+//   password: 'root',
+//   host: '127.0.0.1',
+//   port: 3306,
+//   database: 'myfund'
+// }
 
 function test11 () {
   return 'test11'
@@ -34,11 +36,14 @@ function test22 () {
 
 let generate = new Generate()
 
-generate.setDatabase('mysql', databaseConfig)
+// 设置数据库配置
+generate.setDatabase('oracle', databaseConfig)
+
+// 设置全局模板用方法对象
 generate.setGlobalTempUtils({
   test11
 })
-
+// API模板配置
 const apiConfig = {
   tplPath: path.resolve(__dirname, './tpl/api.art'),
   outPath: path.resolve(__dirname, './dist/api.js'),
@@ -46,7 +51,7 @@ const apiConfig = {
     test22
   }
 }
-
+// 页面模板配置
 const showViewConfig = {
   tplPath: path.resolve(__dirname, './tpl/onlyshowview.art'),
   outPath: path.resolve(__dirname, './dist/show.vue')
