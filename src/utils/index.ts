@@ -12,6 +12,18 @@ export const convertToHump = (str: string, char = '_') => {
 }
 
 /**
+ * 转换驼峰   a_ba  =>  aBa
+ * @param str 要转换的源字符串
+ * @param char 源字符串分隔字符
+ * @returns 
+ */
+ export const convertToBigHump = (str: string, char = '_') => {
+  if (!str) return '';
+  str = convertToHump(str, char)
+  return str[0].toLocaleUpperCase() + str.slice(1);
+};
+
+/**
  * 反向转换驼峰    aBa => a_ba
  * @param str 要转换的源字符串
  * @param char 源字符串分隔字符

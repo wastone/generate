@@ -57,8 +57,8 @@ const connectDatabase = (oracleConfig: DatabaseConfig, tableName: string): Promi
           }
           // 打印返回的表结构
           let column:TableColumnInfo[] = []
-          let tableName = convertToHump(result.rows[0][0])
-          let tableComment = convertToHump(result.rows[0][1])
+          let tableName = result.rows[0][0]
+          let tableComment = result.rows[0][1]
           result.rows.forEach((r:string[]) => {
             column.push({
               name: r[2],

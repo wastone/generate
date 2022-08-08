@@ -51,8 +51,8 @@ const connectDatabase = (config: DatabaseConfig, tableName: string): Promise<Tab
       }
       // 打印返回的表结构
       let column:TableColumnInfo[] = []
-      let tableName = convertToHump(results[0].TABLE_NAME)
-      let tableComment = convertToHump(results[0].TABLE_COMMENT)
+      let tableName = results[0].TABLE_NAME
+      let tableComment = results[0].TABLE_COMMENT
       results.forEach((r:any) => {
         column.push({
           name: r.COLUMN_NAME,
