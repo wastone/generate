@@ -1,31 +1,33 @@
 /**
  * @decription oracle数据库配置
  * @author wl
-*/
-const oracledb = require('oracledb')
-import { convertToHump } from '@/utils/index'
-import { DatabaseConfig, TableColumnInfo, TableInfo } from 'types'
+ */
+const oracledb = require("oracledb");
+import { convertToHump } from "@/utils/index";
+import { DatabaseConfig, TableColumnInfo, TableInfo } from "types";
 /**
  * 请求数据库 查询表结构
  * @param {string} tableName 表名
  */
-const connectDatabase = (oracleConfig: DatabaseConfig, tableName: string): Promise<TableInfo> => {
+const connectDatabase = (
+  oracleConfig: DatabaseConfig,
+  tableName: string
+): Promise<TableInfo> => {
   return new Promise((resolve, reject) => {
     const config = {
       user: oracleConfig.user,
       password: oracleConfig.password,
       // IP:数据库IP地址，PORT:数据库端口，SCHEMA:数据库名称
-      connectString: `${oracleConfig.host}:${oracleConfig.port}/${oracleConfig.serviceID}`
-    }
-    oracledb.getConnection(
-      config,
-      function (err: any, connection: any) {
-        if (err) {
-          console.error(err.message)
-          return
-        }
-        // 查询某表一条数据测试，注意替换你的表名
-        connection.execute(`SELECT
+      connectString: `${oracleConfig.host}:${oracleConfig.port}/${oracleConfig.serviceID}`,
+    };
+    oracledb.getConnection(config, function (err: any, connection: any) {
+      if (err) {
+        console.error(err.message);
+        return;
+      }
+      // 查询某表一条数据测试，注意替换你的表名
+      connection.execute(
+        `SELECT
         ut.TABLE_NAME,
         uc.comments,
         ut.COLUMN_NAME,
@@ -45,50 +47,66 @@ const connectDatabase = (oracleConfig: DatabaseConfig, tableName: string): Promi
       AND ut.Table_Name = '${tableName}'`,
         function (err: any, result: any) {
           if (err) {
-            console.error(err.message)
-            reject(err)
-            doRelease(connection)
-            return
+            console.error(err.message);
+            reject(err);
+            doRelease(connection);
+            return;
           }
           if (result.rows.length === 0) {
             // eslint-disable-next-line prefer-promise-reject-errors
-            reject({ message: '未查询到表信息，检查输入表名称是否正确' })
-            return
+            reject({ message: "未查询到表信息，检查输入表名称是否正确" });
+            return;
           }
-          // 打印返回的表结构
-          let column:TableColumnInfo[] = []
-          let tableName = result.rows[0][0]
-          let tableComment = result.rows[0][1]
-          result.rows.forEach((r:string[]) => {
-            column.push({
-              name: r[2],
-              humpName: convertToHump(r[2]),
-              comment: r[3],
-              nullable: r[5] === 'Y'? true : false,
-              dataType: r[4],
-              dataDefault: r[6],
-              maxLength: r[7] ? parseInt(r[7]) : 0
-            })
+          // 获取主键 TODO 待优化
+          connection.execute(`select cu.COLUMN_NAME from user_cons_columns cu, user_constraints au where cu.constraint_name = au.constraint_name and au.constraint_type = 'P' and au.table_name = '${tableName}'`,
+            function (error: any, res: any) {
+              if (error) {
+                console.error(error.message)
+                reject(error)
+                doRelease(connection)
+                return
+              }
+              if (res.rows.length === 0) {
+                // eslint-disable-next-line prefer-promise-reject-errors
+                reject({ message: '未查询到表信息，检查输入表名称是否正确' })
+                return
+              }
+              const priColumnName = res.rows[0][0]
+              // 打印返回的表结构
+              let column:TableColumnInfo[] = []
+              let tableName = result.rows[0][0]
+              let tableComment = result.rows[0][1]
+              result.rows.forEach((r:string[]) => {
+                column.push({
+                  name: r[2],
+                  humpName: convertToHump(r[2]),
+                  comment: r[3],
+                  nullable: r[5] === 'Y',
+                  dataType: r[4],
+                  dataDefault: r[6],
+                  maxLength: r[7] ? parseInt(r[7]) : 0,
+                  isPrimary: priColumnName === r[2]
+                })
+              })
+              resolve({
+                column,
+                tableName,
+                tableComment
+              })
           })
-          resolve({
-            column,
-            tableName,
-            tableComment
-          })
-        })
       })
+    })
   })
 }
 
-function doRelease (connection: any) {
-  connection.close(
-    function (err: any) {
-      if (err) {
-        console.log('error1')
-        console.error(err.message)
-      }
-      console.log('========= 关闭连接 ==========')
-    })
+function doRelease(connection: any) {
+  connection.close(function (err: any) {
+    if (err) {
+      console.log("error1");
+      console.error(err.message);
+    }
+    console.log("========= 关闭连接 ==========");
+  });
 }
 
-export default connectDatabase
+export default connectDatabase;

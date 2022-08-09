@@ -28,7 +28,8 @@ const connectDatabase = (config: DatabaseConfig, tableName: string): Promise<Tab
     c.IS_NULLABLE,
     c.COLUMN_COMMENT,
     c.COLUMN_DEFAULT,
-    c.CHARACTER_MAXIMUM_LENGTH
+    c.CHARACTER_MAXIMUM_LENGTH,
+		c.COLUMN_KEY
     FROM 
     information_schema.TABLES t,
     INFORMATION_SCHEMA.Columns c 
@@ -58,10 +59,11 @@ const connectDatabase = (config: DatabaseConfig, tableName: string): Promise<Tab
           name: r.COLUMN_NAME,
           humpName: convertToHump(r.COLUMN_NAME),
           comment: r.COLUMN_COMMENT,
-          nullable: r.IS_NULLABLE === 'YES'? true : false,
+          nullable: r.IS_NULLABLE === 'YES',
           dataType: r.DATA_TYPE,
           dataDefault: r.COLUMN_DEFAULT,
-          maxLength: r.CHARACTER_MAXIMUM_LENGTH
+          maxLength: r.CHARACTER_MAXIMUM_LENGTH,
+          isPrimary: r.COLUMN_KEY === 'PRI'
         })
       })
       resolve({

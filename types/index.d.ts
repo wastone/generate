@@ -14,7 +14,8 @@ export interface TableColumnInfo {
   dataType: string,
   comment?: string,
   dataDefault?: any,
-  maxLength?: number
+  maxLength?: number,
+  isPrimary: boolean
 }
 
 export interface TableInfo {
