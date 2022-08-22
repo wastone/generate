@@ -11,7 +11,6 @@ const fs = require('fs')
 const template = require("art-template")
 const chalk = require("chalk")
 
-// import { readFile } from "./utils/file"
 import connectDatabase from '@/database'
 
 import { DatabaseConfig, TableInfo, Option } from "types";

@@ -1,12 +1,5 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-
 const path = require('path')
 const Generate = require('../lib/index')
-
-import { fileURLToPath } from 'url'
-const filename = fileURLToPath(import.meta.url) // 这里不能声明__filename,因为已经有内部的__filename了，重复声明会报错
-const __dirname = path.dirname(filename)
 
 /*=========== 自己的数据库配置 ================*/
 // oracle 配置
@@ -24,7 +17,7 @@ const databaseConfig = {
   password: 'root', // 密码
   host: '127.0.0.1', // ip
   port: 3306, // 端口
-  database: '*' // 数据库名
+  database: 'myfund' // 数据库名
 }
 
 function test11 () {

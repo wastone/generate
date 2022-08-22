@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "set NODE_ENV=developemnt&& rollup -c rollup.config.js -w",
     "build": "rimraf -fr lib && set NODE_ENV=production&& rollup -c rollup.config.js",
-    "test": "npm run build && node example/index"
+    "test": "npm run build && node --loader ts-node/esm example/index",
+    "onlytest": "node example/index"
   },
   "types": "lib/index.d.ts",
   "dependencies": {
@@ -26,13 +27,14 @@
     "@types/oracledb": "^5.2.3",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
+    "mysql": "^2.18.1",
+    "oracledb": "^5.3.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.70.1",
     "rollup-plugin-polyfill-node": "^0.8.0",
     "rollup-plugin-typescript2": "^0.31.2",
-    "typescript": "^4.6.2",
-    "mysql": "^2.18.1",
-    "oracledb": "^5.3.0"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.6.2"
   },
   "peerDependencies": {
     "mysql": "^2.18.1",
