@@ -1,4 +1,5 @@
 {
+  "header":"# Changelog \n\n",
   "types": [
     {"type": "chore", "section":"Others", "hidden": false},
     {"type": "revert", "section":"Reverts", "hidden": false},
