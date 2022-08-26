@@ -1,8 +1,10 @@
 
-import mysqlConnect from './mysql'
-import oracleConnect from './oracle'
+import mysqlConnect, { getTableList as getMysqlTableList } from './mysql'
+import oracleConnect, { getTableList as getOracleTableList } from './oracle'
 
 export default {
   mysqlConnect,
-  oracleConnect
+  oracleConnect,
+  getMysqlTableList,
+  getOracleTableList
 }

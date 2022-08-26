@@ -151,3 +151,6 @@ class Generate {
 }
 
 export default Generate
+
+// 导出封装的数据库方法
+export const databaseUtil = connectDatabase
